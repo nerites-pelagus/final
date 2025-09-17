@@ -1,6 +1,6 @@
 // src/components/LoginForm.jsx
 import React, { useState, useEffect } from "react";
-import { Card, Form, Input, Button, message } from "antd";
+import { Card, Form, Input, Button } from "antd";
 import { findUser, setCurrentUserToStorage, getUsersFromStorage, ensureAdminExists } from "../utils/auth";
 
 const LoginForm = ({ onLogin, onNavigate }) => {
@@ -16,11 +16,10 @@ const LoginForm = ({ onLogin, onNavigate }) => {
     const user = users.find(u => u.username === values.username && u.password === values.password);
     setTimeout(() => {
       if (user) {
-        message.success("Login successful");
         setCurrentUserToStorage(user);
         onLogin(user);
       } else {
-        message.error("Incorrect username or password");
+        alert("Incorrect username or password");
       }
       setLoading(false);
     }, 500);

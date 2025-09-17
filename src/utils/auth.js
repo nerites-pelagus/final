@@ -18,7 +18,7 @@ export function ensureAdminExists() {
   if (!hasAdmin) {
     users.push({
       username: "admin",
-      password: "admin123",
+      password: "admin",
       email: "admin@system.com",
       phonenumber: "0000000000",
       role: "admin"

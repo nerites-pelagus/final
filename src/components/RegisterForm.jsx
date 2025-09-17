@@ -1,13 +1,13 @@
 // src/components/RegisterForm.jsx
 import React from "react";
-import { Card, Form, Input, Button, Radio, message } from "antd";
+import { Card, Form, Input, Button, Radio } from "antd";
 import { getUsersFromStorage, saveUsersToStorage } from "../utils/auth";
 
 const RegisterForm = ({ onNavigate }) => {
   const onFinish = (values) => {
     const users = getUsersFromStorage();
     if (users.find(u => u.username === values.username)) {
-      message.error("Username already exists");
+      alert("Username already exists");
       return;
     }
 
@@ -20,7 +20,7 @@ const RegisterForm = ({ onNavigate }) => {
     };
     users.push(newUser);
     saveUsersToStorage(users);
-    message.success("Registration successful");
+    alert("Registration successful");
     onNavigate("login");
   };
 

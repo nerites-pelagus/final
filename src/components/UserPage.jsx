@@ -1,6 +1,6 @@
 // src/components/UserPage.jsx
 import React, { useState, useEffect } from "react";
-import { Card, Form, Input, Button, Modal, message} from "antd";
+import { Card, Form, Input, Button, Modal } from "antd";
 import { getCurrentUserFromStorage, getUsersFromStorage, saveUsersToStorage, deleteUser } from "../utils/auth";
 
 const UserPage = ({ onLogout, setRoute }) => {
@@ -25,7 +25,7 @@ const UserPage = ({ onLogout, setRoute }) => {
       setUser(users[idx]);
       alert("Update successful!");
     } else {
-      message.error("User not found!");
+      alert("User not found!");
     }
     setLoading(false);
   };
@@ -38,7 +38,7 @@ const UserPage = ({ onLogout, setRoute }) => {
     try {
       const values = await passwordForm.validateFields();
       if (values.oldPassword !== user.password) {
-        message.error("Incorrect old password!");
+        alert("Incorrect old password!");
         return;
       }
 
@@ -53,7 +53,7 @@ const UserPage = ({ onLogout, setRoute }) => {
         setIsPasswordModalVisible(false);
         passwordForm.resetFields();
       } else {
-        message.error("User not found!");
+        alert("User not found!");
       }
     } catch (errorInfo) {
       console.log('Validation Failed:', errorInfo);
@@ -66,18 +66,11 @@ const UserPage = ({ onLogout, setRoute }) => {
   };
   
   const handleDeleteAccount = () => {
-    Modal.confirm({
-      alertTitle: "Confirm Account Deletion",
-      content: "Are you sure you want to delete your account? This action cannot be undone.",
-      okText: "Delete",
-      okType: "danger",
-      cancelText: "Cancel",
-      onOk: () => {
-        deleteUser(user.username);
-        message.success("Delete account successful!");
-        onLogout();
-      }
-    });
+    if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      deleteUser(user.username);
+      alert("Delete account successful!");
+      onLogout();
+    }
   };
 
   if (!user) {
