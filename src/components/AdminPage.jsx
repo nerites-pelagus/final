@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Modal, Input, Popconfirm, message, Card, Form, Select } from "antd";
 import { getUsersFromStorage, saveUsersToStorage, resetPassword, updateUser, addUser } from "../utils/auth";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 
 const { Option } = Select;
 
-const AdminPage = ({ setRoute }) => {
+const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [editing, setEditing] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   useEffect(() => {
     refresh();
@@ -21,11 +23,13 @@ const AdminPage = ({ setRoute }) => {
   };
 
   const handleDelete = (username) => {
-    if (username === "admin") {
-      message.error("Cannot delete the default admin account");
+    const userList = getUsersFromStorage();
+    const userToDelete = userList.find((u) => u.username === username);
+    if (userToDelete && userToDelete.role === "admin") {
+      message.error("Cannot delete an admin account.");
       return;
     }
-    const newList = getUsersFromStorage().filter((u) => u.username !== username);
+    const newList = userList.filter((u) => u.username !== username);
     saveUsersToStorage(newList);
     message.success("Account deleted successfully");
     refresh();
@@ -100,7 +104,7 @@ const AdminPage = ({ setRoute }) => {
             okText="Yes"
             cancelText="No"
           >
-            <Button danger disabled={record.username === "admin"}>
+            <Button danger disabled={record.role === "admin"}>
               Delete
             </Button>
           </Popconfirm>
@@ -132,7 +136,7 @@ const AdminPage = ({ setRoute }) => {
           <Button type="primary" onClick={openCreate}>
             Create new user
           </Button>
-          <Button style={{ marginLeft: 8, float: "right" }} onClick={() => setRoute("home")}>
+          <Button style={{ marginLeft: 8, float: "right" }} onClick={() => navigate("/home")}>
             Back to Home
           </Button>
         </div>

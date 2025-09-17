@@ -1,9 +1,11 @@
 // src/components/RegisterForm.jsx
 import React from "react";
 import { Card, Form, Input, Button, Radio } from "antd";
+import { useNavigate } from "react-router-dom";
 import { getUsersFromStorage, saveUsersToStorage } from "../utils/auth";
 
-const RegisterForm = ({ onNavigate }) => {
+const RegisterForm = () => {
+  const navigate = useNavigate();
   const onFinish = (values) => {
     const users = getUsersFromStorage();
     if (users.find(u => u.username === values.username)) {
@@ -21,7 +23,7 @@ const RegisterForm = ({ onNavigate }) => {
     users.push(newUser);
     saveUsersToStorage(users);
     alert("Registration successful");
-    onNavigate("login");
+    navigate("/login");
   };
 
   return (

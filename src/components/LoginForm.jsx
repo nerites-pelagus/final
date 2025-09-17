@@ -1,10 +1,12 @@
 // src/components/LoginForm.jsx
 import React, { useState, useEffect } from "react";
 import { Card, Form, Input, Button } from "antd";
-import { findUser, setCurrentUserToStorage, getUsersFromStorage, ensureAdminExists } from "../utils/auth";
+import { setCurrentUserToStorage, getUsersFromStorage, ensureAdminExists } from "../utils/auth";
+import { useNavigate, Link } from "react-router-dom";
 
-const LoginForm = ({ onLogin, onNavigate }) => {
+const LoginForm = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     ensureAdminExists();
@@ -18,6 +20,7 @@ const LoginForm = ({ onLogin, onNavigate }) => {
       if (user) {
         setCurrentUserToStorage(user);
         onLogin(user);
+        navigate(user.role === "admin" ? "/admin" : "/user");
       } else {
         alert("Incorrect username or password");
       }
@@ -37,16 +40,15 @@ const LoginForm = ({ onLogin, onNavigate }) => {
           </Form.Item>
 
           <div style={{ textAlign: "right", marginBottom: 12 }}>
-            <a onClick={() => onNavigate("forget")}>Forgot password?</a>
+            <Link to="/forget">Forgot password?</Link>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
             <Form.Item>
               <Button type="primary" htmlType="submit" loading={loading} block>Login</Button>
             </Form.Item>
-
             <Form.Item >
-              <Button onClick={() => onNavigate("register")} block>Register</Button>
+              <Button onClick={() => navigate("/register")} block>Register</Button>
             </Form.Item>
           </div>
 

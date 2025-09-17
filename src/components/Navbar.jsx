@@ -2,42 +2,45 @@
 import React from "react";
 import { Layout, Button, Avatar, Dropdown, Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { Link, useNavigate } from "react-router-dom";
 
 const { Header } = Layout;
 
-const Navbar = ({ isLoggedIn, user, onLogout, onNavigate }) => {
+const Navbar = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+  const isLoggedIn = !!user;
+
+  const handleMenuClick = (e) => {
+    if (e.key === "logout") {
+      onLogout();
+      navigate("/home");
+    } else {
+      const path = user?.role === 'admin' ? '/admin' : '/user';
+      navigate(path);
+    }
+  };
+
   const menu = (
     <Menu
-      onClick={(e) => {
-        if (e.key === "logout") {
-          onLogout();
-        } else if (user && user.role === 'admin') {
-          onNavigate("admin");
-        } else {
-          onNavigate("user");
-        }
-      }}
+      onClick={handleMenuClick}
       items={[
-        { key: "info", label: "Info" },
-        { key: "setting", label: "Settings" },
+        { key: "profile", label: "Profile" },
         { key: "logout", label: "Log out" }
       ]}
     />
   );
 
   return (
-    <Header className="site-header" style={{ alignItems: "center" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <div style={{ color: "#fff", fontWeight: 700, fontSize: 22, cursor: "pointer" }} onClick={() => onNavigate("home")}>
-          Home
-        </div>
-      </div>
+    <Header className="site-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Link to="/home" style={{ color: "#fff", fontWeight: 700, fontSize: 22 }}>
+        Home
+      </Link>
 
       <div className="header-right" style={{ display: "flex", alignItems: "center" }}>
         {!isLoggedIn ? (
-          <Button type="link" onClick={() => onNavigate("login")} style={{ color: "#fff" }}>
-            Login
-          </Button>
+          <Link to="/login">
+            <Button type="link" style={{ color: "#fff" }}>Login</Button>
+          </Link>
         ) : (
           <Dropdown overlay={menu} placement="bottomRight">
             <Avatar size="large" icon={<UserOutlined />} style={{ cursor: "pointer" }} />

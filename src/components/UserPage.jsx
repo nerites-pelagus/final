@@ -2,13 +2,15 @@
 import React, { useState, useEffect } from "react";
 import { Card, Form, Input, Button, Modal } from "antd";
 import { getCurrentUserFromStorage, getUsersFromStorage, saveUsersToStorage, deleteUser } from "../utils/auth";
+import { useNavigate } from "react-router-dom";
 
-const UserPage = ({ onLogout, setRoute }) => {
+const UserPage = ({ onLogout }) => {
   const [user, setUser] = useState(getCurrentUserFromStorage());
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [isPasswordModalVisible, setIsPasswordModalVisible] = useState(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
     if (user) form.setFieldsValue(user);
@@ -70,6 +72,7 @@ const UserPage = ({ onLogout, setRoute }) => {
       deleteUser(user.username);
       alert("Delete account successful!");
       onLogout();
+      navigate("/home");
     }
   };
 

@@ -1,10 +1,12 @@
 // src/components/ForgetForm.jsx
 import React, { useState } from "react";
 import { Card, Form, Input, Button, notification } from "antd";
+import { useNavigate } from "react-router-dom";
 import { getUsersFromStorage, saveUsersToStorage } from "../utils/auth";
 
-const ForgetForm = ({ onNavigate }) => {
+const ForgetForm = () => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onFinish = (values) => {
     setLoading(true);
@@ -18,7 +20,7 @@ const ForgetForm = ({ onNavigate }) => {
           message: "Password Reset Successful",
           description: "Your password has been reset to '123456'. Please log in again."
         });
-        onNavigate("login");
+        navigate("/login");
       } else {
         notification.error({
           message: "Account not found",
